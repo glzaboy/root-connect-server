@@ -7,6 +7,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.codec.json.JsonObjectDecoder;
 import io.netty.handler.timeout.ReadTimeoutHandler;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,8 +37,9 @@ public class ApplicationStart implements ApplicationRunner {
         serverBootstrap.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
+                socketChannel.pipeline().addLast(new JsonObjectDecoder());
                 socketChannel.pipeline().addLast(new DiscardServerHandler());
-                socketChannel.pipeline().addLast(new ReadTimeoutHandler(5));
+//                socketChannel.pipeline().addLast(new ReadTimeoutHandler(5));
             }
         });
         ChannelFuture sync = serverBootstrap.bind(9090).sync();
