@@ -5,6 +5,8 @@ import io.netty.channel.*;
 import io.netty.util.CharsetUtil;
 import io.netty.util.ReferenceCountUtil;
 
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.Date;
 
 public class DiscardServerHandler extends ChannelHandlerAdapter {
@@ -24,7 +26,8 @@ public class DiscardServerHandler extends ChannelHandlerAdapter {
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         ByteBuf buffer = ctx.alloc().buffer(100);
-        buffer.writeBytes(new Date().toString().getBytes());
+        InetSocketAddress socketAddress = (InetSocketAddress)ctx.channel().remoteAddress();
+        buffer.writeBytes((socketAddress.getHostString()+socketAddress.getAddress()+socketAddress.getPort()).getBytes());
         ChannelFuture write = ctx.writeAndFlush(buffer);
         write.addListener(ChannelFutureListener.CLOSE);
 //        write.addListener(new ChannelFutureListener() {
