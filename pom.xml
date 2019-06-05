@@ -33,6 +33,7 @@
         </dependency>
     </dependencies>
     <build>
+        <finalName>root-connect.server.jar</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
