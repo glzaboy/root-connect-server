@@ -1,5 +1,6 @@
 package com.qintingfm.root.connect.server;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -29,6 +30,8 @@ public class ApplicationStart implements ApplicationRunner {
     @Autowired
     @Qualifier("workGroup")
     NioEventLoopGroup workGroup;
+    @Autowired
+    ObjectMapper objectMapper;
     @Override
     public void run(ApplicationArguments args) throws Exception {
         serverBootstrap.group(bossGroup,workGroup);
@@ -38,7 +41,7 @@ public class ApplicationStart implements ApplicationRunner {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
                 socketChannel.pipeline().addLast(new JsonObjectDecoder());
-                socketChannel.pipeline().addLast(new DiscardServerHandler());
+                socketChannel.pipeline().addLast(new DiscardServerHandler(objectMapper));
 //                socketChannel.pipeline().addLast(new ReadTimeoutHandler(5));
             }
         });

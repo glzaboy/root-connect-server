@@ -16,17 +16,22 @@ import java.util.Date;
 
 public class DiscardServerHandler extends ChannelHandlerAdapter {
     Logger logger= LoggerFactory.getLogger(DiscardServerHandler.class);
+    ObjectMapper objectMapper;
+
+    public DiscardServerHandler(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
+
     public void channelRead(ChannelHandlerContext ctx, Object msg) { // (2)
 
         // Discard the received data silently.
         ByteBuf in = (ByteBuf) msg;
-        ObjectMapper mapper = new ObjectMapper();
         try {
-            User user = mapper.readValue(new String(in.toString(CharsetUtil.US_ASCII)), User.class);
+            User user = objectMapper.readValue(new String(in.toString(CharsetUtil.US_ASCII)), User.class);
             logger.info(user.toString());
             ByteBuf buffer = ctx.alloc().buffer(1024);
             user.setIp(new Date().toString());
-            buffer.writeBytes(mapper.writeValueAsString(user).getBytes());
+            buffer.writeBytes(objectMapper.writeValueAsString(user).getBytes());
             ChannelFuture write = ctx.writeAndFlush(buffer);
             write.addListener(ChannelFutureListener.CLOSE);
         } catch (IOException e) {
