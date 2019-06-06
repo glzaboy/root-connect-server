@@ -41,7 +41,9 @@ public class ApplicationStart implements ApplicationRunner {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
                 socketChannel.pipeline().addLast(new JsonObjectDecoder());
-                socketChannel.pipeline().addLast(new DiscardServerHandler(objectMapper));
+                socketChannel.pipeline().addLast(new UserDecoder(objectMapper));
+                socketChannel.pipeline().addLast(new UserEncoder(objectMapper));
+                socketChannel.pipeline().addLast(new DiscardServerHandler());
 //                socketChannel.pipeline().addLast(new ReadTimeoutHandler(5));
             }
         });

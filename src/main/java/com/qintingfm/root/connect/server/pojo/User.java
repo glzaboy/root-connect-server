@@ -1,9 +1,12 @@
 package com.qintingfm.root.connect.server.pojo;
 
+import java.util.Date;
+
 public class User {
     String name ;
     String sex;
     String ip;
+    Date date;
 
     public String getName() {
         return name;
@@ -29,12 +32,21 @@ public class User {
         this.ip = ip;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "name='" + name + '\'' +
                 ", sex='" + sex + '\'' +
                 ", ip='" + ip + '\'' +
+                ", date=" + date +
                 '}';
     }
 }
